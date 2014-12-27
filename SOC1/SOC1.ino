@@ -15,7 +15,7 @@
 //   NEO_KHZ400  400 KHz (classic 'v1' (not v2) FLORA pixels, WS2811 drivers)
 //   NEO_GRB     Pixels are wired for GRB bitstream (most NeoPixel products)
 //   NEO_RGB     Pixels are wired for RGB bitstream (v1 FLORA pixels, not v2)
-Adafruit_NeoPixel strip = Adafruit_NeoPixel(MAXPIXELS, PIN, NEO_RGB + NEO_KHZ800);
+Adafruit_NeoPixel strip = Adafruit_NeoPixel(MAXPIXELS, PIN, NEO_GRB + NEO_KHZ800);
 int program = 0;
 int addr = 10;
 int button = 0;
@@ -31,12 +31,12 @@ void setup() {
   button = digitalRead(BUTTON); 
   program = EEPROM.read(addr);
   color = EEPROM.read(addr+1);
-  if (program > 6) {
+  if (program > 7) {
     program = 0;}
     if ( !button){
     EEPROM.write(addr, ++program);
     }
-     program = 2;
+     program = 6;
 }
 
 void loop() {
@@ -48,7 +48,7 @@ void loop() {
     case 4: rainbowCycle(30); break;
     case 5: rainbow(100); break;
     case 6: colorfadeLoop(10); break;
-    case 7: Police(500);
+    case 7: police(500);
     default:  colorWipeButton(); break;
   }
   
@@ -134,10 +134,10 @@ void colorPart(uint32_t c, uint8_t wait,uint8_t first, uint8_t last) {
 
 void colorRotate(uint32_t c1, uint32_t c2){
     for(uint16_t i=0; i<1; i++) {
-      colorPart(c1,0,6);
-      colorPart(c2,7,13);
-      colorPart(c1,14,23);
-      colorPart(c2,23,27);
+      colorPart(c1,0,0,7);
+      colorPart(c2,0,7,14);
+      colorPart(c1,0,14,21);
+      colorPart(c2,0,21,29);
       strip.show();
   }
 }
