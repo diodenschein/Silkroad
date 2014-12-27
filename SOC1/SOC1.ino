@@ -6,6 +6,7 @@
 #define PIN 9
 #define BUTTON 2
 #define MIN 2
+#define MAXPIXELS 28
 
 // Parameter 1 = number of pixels in strip
 // Parameter 2 = pin number (most are valid)
@@ -14,7 +15,7 @@
 //   NEO_KHZ400  400 KHz (classic 'v1' (not v2) FLORA pixels, WS2811 drivers)
 //   NEO_GRB     Pixels are wired for GRB bitstream (most NeoPixel products)
 //   NEO_RGB     Pixels are wired for RGB bitstream (v1 FLORA pixels, not v2)
-Adafruit_NeoPixel strip = Adafruit_NeoPixel(28, PIN, NEO_RGB + NEO_KHZ800);
+Adafruit_NeoPixel strip = Adafruit_NeoPixel(MAXPIXELS, PIN, NEO_RGB + NEO_KHZ800);
 int program = 0;
 int addr = 10;
 int button = 0;
@@ -35,7 +36,7 @@ void setup() {
     if ( !button){
     EEPROM.write(addr, ++program);
     }
-    // program = 2;
+     program = 2;
 }
 
 void loop() {
@@ -47,6 +48,7 @@ void loop() {
     case 4: rainbowCycle(30); break;
     case 5: rainbow(100); break;
     case 6: colorfadeLoop(10); break;
+    case 7: Police(500);
     default:  colorWipeButton(); break;
   }
   
@@ -122,6 +124,43 @@ void colorWipe(uint32_t c, uint8_t wait) {
       delay(wait);
   }
 }
+
+void colorPart(uint32_t c, uint8_t wait,uint8_t first, uint8_t last) {
+  for(uint16_t i=first; i<last; i++) {
+      strip.setPixelColor(i, c);
+      delay(wait);
+  }
+}
+
+void colorRotate(uint32_t c1, uint32_t c2){
+    for(uint16_t i=0; i<1; i++) {
+      colorPart(c1,0,6);
+      colorPart(c2,7,13);
+      colorPart(c1,14,23);
+      colorPart(c2,23,27);
+      strip.show();
+  }
+}
+
+void police(uint8_t wait){
+    for(uint16_t i=0; i<1; i++) {
+      colorRotate(strip.Color(255, 0, 0), strip.Color(0, 0, 255));
+      delay(wait);
+      colorRotate(strip.Color(0, 0, 255), strip.Color(255, 0, 0));
+      delay(wait);
+  }
+}
+
+//void colorRotate(uint32_t c, uint8_t wait){
+//  for(uint16_t i=0; i<4; i++) {
+//      for(uint16_t i=0; i<strip.numPixels(); i++) {
+//        strip.setPixelColor(i, 0);
+//        if
+//        st
+//      strip.show();
+//      delay(wait);
+//  }
+//}
 
 void colorStrip(uint32_t c, uint8_t wait) {
   for(uint16_t i=0; i<strip.numPixels(); i++) {
