@@ -27,7 +27,8 @@ void setup() {
   strip.begin();
   strip.show(); // Initialize all pixels to 'off'
   pinMode(BUTTON,INPUT_PULLUP);
-  
+  pinMode(3,OUTPUT); 
+  digitalWrite(3, LOW); 
   button = digitalRead(BUTTON); 
   program = EEPROM.read(addr);
   color = EEPROM.read(addr+1);
@@ -36,7 +37,7 @@ void setup() {
     if ( !button){
     EEPROM.write(addr, ++program);
     }
-     program = 6;
+    // program = 6;
 }
 
 void loop() {
