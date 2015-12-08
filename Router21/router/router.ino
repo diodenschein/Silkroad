@@ -20,13 +20,13 @@ void fullstop(){
   //insert ramp if nessesary
   analogWrite(SPEEDPIN, 0);
   digitalWrite(TURNPIN,HIGH);
-  delay_ms(200);
+  delay(200); //wait for bouncing
   digitalWrite(BRAKEPIN,LOW);  
 }
 
 void go(){
   digitalWrite(BRAKEPIN, HIGH);
-  delay_ms(200);
+  delay(200); //wait for bouncing
   analogWrite(SPEEDPIN, fastness);
   digitalWrite(TURNPIN,LOW);
 }
