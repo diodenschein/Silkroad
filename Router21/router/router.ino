@@ -1,4 +1,5 @@
 
+#include "TimerOne.h" // https://github.com/PaulStoffregen/TimerOne.git
 
 //Pin definitions
 #define DIRECTIONPIN 2
@@ -13,8 +14,11 @@
 #define SLOW 127
 #define FAST 129
 
+#define DEFAULTTIMEOUT 15 //seconds
+
 //global speed variable
 volatile uint8_t fastness = SLOW;
+volatile uint8_t timeout = DEFAULTTIMEOUT;
 
 void fullstop(){
   //insert ramp if nessesary
@@ -31,13 +35,38 @@ void go(){
   digitalWrite(TURNPIN,LOW);
 }
 
-void to_one(){
-    analogWrite(DIRPIN, LOW);
+void dir_to_one(){
+    analogWrite(DIRECTIONPIN, LOW);
 }
 
-void to_two(){
-    analogWrite(DIRPIN, HIGH);
+void dir_to_two(){
+    analogWrite(DIRECTIONPIN, HIGH);
 }
+
+void error(){
+ //handle this 
+  while (1){
+
+  } 
+}
+
+void SetTimeout(){
+ Timer1.stop();
+ timeout = DEFAULTTIMEOUT;
+ Timer1.restart(); 
+}
+
+void NextSecond(){
+  if (timeout){
+    timeout--;
+  }
+  else{
+    fullstop();
+    error(); 
+    Timer1.stop();
+  }
+}
+
 
 void setup(){
   pinMode(DIRECTIONPIN, OUTPUT);
@@ -47,9 +76,14 @@ void setup(){
   pinMode(ENDSTOP1, INPUT_PULLUP);
   pinMode(ENDSTOP2, INPUT_PULLUP);
   
+  Timer1.initialize(10000000);
+  Timer1.attachInterrupt(NextSecond);
+  
+  
   //fastness is globally set to SLOW
-  to_one();
+  dir_to_one();
   go();
+  SetTimeout();
   while(digitalRead(!ENDSTOP1)){
     
   }
@@ -60,7 +94,7 @@ void setup(){
 void loop(){
   
   
-  
+  //doo the right thing 
 
 
 
